@@ -1,0 +1,20 @@
+# https://artifacthub.io/packages/helm/cert-manager/cert-manager
+# https://github.com/cert-manager/cert-manager/blob/master/deploy/charts/cert-manager/values.yaml
+installCRDs: false
+replicaCount: 1
+extraArgs:
+  - --dns01-recursive-nameservers-only
+  # This is overridden on the command line
+  - --dns01-recursive-nameservers=9.9.9.9,1.1.1.1
+
+podDnsPolicy: None
+podDnsConfig:
+  nameservers:
+    # The cloudflare DNS servers do not serve other domains. Therefore, they cannot resolve hostnames to complete
+    # the DNS challenge.
+    - "9.9.9.9"
+    - "1.1.1.1"
+
+ingressShim:
+  defaultIssuerKind: ClusterIssuer
+  defaultIssuerName: letsencrypt-issuer

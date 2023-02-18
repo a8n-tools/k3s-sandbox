@@ -1,0 +1,15 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: a8n-tech
+  namespace: traefik-external
+spec:
+  secretName: a8n-tech-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.a8n.tech"
+  dnsNames:
+    - "a8n.tech"
+    - "*.a8n.tech"

@@ -1,0 +1,67 @@
+---
+# Secure entry point
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`traefik.$BASE_DOMAIN`)
+      kind: Rule
+      middlewares:
+        - name: traefik-dashboard-basicauth
+          namespace: traefik
+      services:
+        - name: api@internal
+          kind: TraefikService
+  tls:
+    secretName: traefik-a8n-tech-staging-tls
+
+---
+# Insecure entry point
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard-plain
+  namespace: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`traefik.$BASE_DOMAIN`)
+      kind: Rule
+      middlewares:
+        - name: traefik-dashboard-basicauth
+          namespace: traefik
+      services:
+        - name: api@internal
+          kind: TraefikService
+
+---
+# Middleware for basic auth
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-dashboard-basicauth
+  namespace: traefik
+spec:
+  basicAuth:
+    secret: traefik-dashboard-basicauth-secret
+
+---
+# Basic auth
+apiVersion: v1
+kind: Secret
+metadata:
+  name: traefik-dashboard-basicauth-secret
+  namespace: traefik
+type: Opaque
+data:
+  users: $ADMIN_BASIC_AUTH_BASE64

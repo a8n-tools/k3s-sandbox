@@ -1,0 +1,2 @@
+# Swagger definition is pulled every time it's run.
+k8s-swagger.json

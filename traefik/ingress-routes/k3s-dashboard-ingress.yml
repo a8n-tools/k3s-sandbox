@@ -1,0 +1,65 @@
+---
+# Secure entry point
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: k3s-dashboard
+  namespace: kubernetes-dashboard
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.containo.us/middleware: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`k3s.$BASE_DOMAIN`)
+      kind: Rule
+      # BasicAuth interferes with kubernetes dashboard authentication.
+      # Instead of Log Out, it will show Logged in with auth header.
+      #middlewares:
+      # - name: k3s-dashboard-basicauth
+      #   namespace: kubernetes-dashboard
+      services:
+        - kind: Service
+          name: kubernetes-dashboard
+          namespace: kubernetes-dashboard
+          scheme: https
+          port: 443
+          serversTransport: k3s-dashboard-transport
+  tls:
+    secretName: k3s-a8n-tech-staging-tls
+
+---
+# See this answer on how to handle the TLS certificate on the backend that is not valid.
+# https://devops.stackexchange.com/a/14396
+apiVersion: traefik.containo.us/v1alpha1
+kind: ServersTransport
+metadata:
+  name: k3s-dashboard-transport
+  namespace: kubernetes-dashboard
+spec:
+  serverName: "k3s.$BASE_DOMAIN"
+  # Upstream does not have a valid cert from a trusted CA.
+  insecureSkipVerify: true
+
+---
+# Middleware for basic auth
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: k3s-dashboard-basicauth
+  namespace: kubernetes-dashboard
+spec:
+  basicAuth:
+    secret: k3s-dashboard-basicauth-secret
+
+---
+# Basic auth
+apiVersion: v1
+kind: Secret
+metadata:
+  name: k3s-dashboard-basicauth-secret
+  namespace: kubernetes-dashboard
+type: Opaque
+data:
+  users: $ADMIN_BASIC_AUTH_BASE64

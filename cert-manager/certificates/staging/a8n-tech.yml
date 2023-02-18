@@ -1,0 +1,44 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: a8n-tech-staging
+  namespace: traefik
+spec:
+  secretName: a8n-tech-staging-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "a8n.tech"
+  dnsNames:
+  - "a8n.tech"
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: traefik-a8n-tech-staging
+  namespace: traefik
+spec:
+  secretName: traefik-a8n-tech-staging-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "traefik.a8n.tech"
+  dnsNames:
+    - "traefik.a8n.tech"
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: k3s-a8n-tech-staging
+  namespace: kubernetes-dashboard
+spec:
+  secretName: k3s-a8n-tech-staging-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "k3s.a8n.tech"
+  dnsNames:
+    - "k3s.a8n.tech"
