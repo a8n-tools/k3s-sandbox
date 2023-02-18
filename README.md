@@ -16,32 +16,39 @@ The current state is that it works for me; it may not work for you. The scripts 
 
 ## Table of Contents
 
-1. [Terminology](#Terminology)
-2. [Requirements](#Requirements)
-3. [Quick Start](#Quick-Start)
+1. [Terminology](#terminology)
+2. [Requirements](#requirements)
+3. [Quick Start](#quick-start)
 4. [.env](#env)
-5. [Notes to clean up](#Below-are-notes-to-clean-up)
-6. [Networking](#Networking)
-   1. [Flannel networking](#Flannel-networking)
-   2. [Ingress Controller vs Ingress Rules](#Ingress-Controller-vs-Ingress-Rules)
-7. [Install k3s cluster](#Install-k3s-cluster)
-8. [Dashboard](#Dashboard)
-9. [Prometheus stack](#Prometheus-stack)
-10. [Cert Manager](#Cert-Manager)
-11. [Swagger API](#Swagger-API)
-12. [To Learn](#To-Learn)
-13. [Resources](#Resources)
+5. [Notes to clean up](#below-are-notes-to-clean-up)
+6. [Networking](#networking)
+    1. [Flannel networking](#flannel-networking)
+    2. [Ingress Controller vs Ingress Rules](#ingress-controller-vs-ingress-rules)
+7. [Install k3s cluster](#install-k3s-cluster)
+8. [Dashboard](#dashboard)
+9. [Prometheus stack](#prometheus-stack)
+10. [Cert Manager](#cert-manager)
+11. [Swagger API](#swagger-api)
+12. [To Learn](#to-learn)
+13. [Resources](#resources)
 
 ## Terminology
 
-- k8s - Kubernetes, the beast we are trying to tame.
-- k3s - A smaller Kubernetes. Kubes for short. See [What's with the name?][] and the [pronunciation][].
+- [k8s] - Kubernetes, the beast we are trying to tame.
+- [k3s] - A smaller Kubernetes. Kubes for short. See [What's with the name?][] and the [pronunciation][].
     - Note: Many other smaller/portable/easy-to-deploy versions of k8s exist besides k3s.
 - Helm - Package Manager for k8s.
 - Charts - The packages that Helm installs, expressed as yaml files. Commonly called Helm Charts.
 
-[What's with the name?](https://docs.k3s.io/)
-[pronunciation](https://github.com/k3s-io/k3s/issues/55)
+[k8s]: https://github.com/kubernetes/kubernetes
+
+[k3s]: https://github.com/k3s-io/k3s
+
+[helm]: https://github.com/helm/helm
+
+[What's with the name?]: https://docs.k3s.io/
+
+[pronunciation]: https://github.com/k3s-io/k3s/issues/55
 
 ## Requirements
 
@@ -63,16 +70,16 @@ Google the requirements for k8s and k3s.
   entries to the hosts file is preferred since this is a sandbox.
 - Cloudflare is used for DNS auth for certs. It's easy to change the CRDs to use other DNS providers, though.
     - Note: The Let's Encrypt staging environment is used to prevent lockout due to rate limiting.
-- Download [k3s][] and put it in your path.
+- Download [k3s][k3s download] and put it in your path.
     - symlink k8s to kubectl: `ln -s k3s kubectl`
-- Download [helm][] and put it in your path.
-- Install `envsubst` or download the Go version of [envsubst][] and put it in your path.
+- Download [helm][helm download] and put it in your path.
+- Install `envsubst` or download the Go version of [envsubst][envsubst download] and put it in your path.
 
-[k3s]: https://github.com/k3s-io/k3s/releases
+[k3s download]: https://github.com/k3s-io/k3s/releases
 
-[helm]: https://github.com/helm/helm/releases
+[helm download]: https://github.com/helm/helm/releases
 
-[envsubst]: https://github.com/a8m/envsubst/releases
+[envsubst download]: https://github.com/a8m/envsubst/releases
 
 [issue on k3os]: https://github.com/rancher/k3os/issues/600
 
@@ -132,6 +139,30 @@ substituting.
 
 [--flannel-iface]: https://docs.k3s.io/reference/server-config#agent-networking
 
+## Swagger API
+
+Run swagger to auto-complete in the IDE. `kubectl proxy` is meant to be run ad-hoc in the terminal, not controlled by a
+script. See [how to stop kubectl proxy][] for details.
+
+`run-swagger.sh` will download the Open API specs and start a docker container running swagger for presenting in a web
+page. See the blog post [how to view swagger UI].
+
+```bash
+# Terminal 1
+kubectl proxy
+
+# Terminal 2
+./swagger/run-swagger.sh
+```
+
+In JetBrains GoLand, install the [Goland Kubernetes plugin] and point it to the swagger URL.
+
+[How to stop kubectl proxy]: https://stackoverflow.com/questions/46302126/how-to-stop-kubectl-proxy
+
+[How to View Swagger UI]: https://jonnylangefeld.com/blog/kubernetes-how-to-view-swagger-ui
+
+[Goland Kubernetes plugin]: https://www.jetbrains.com/help/go/kubernetes.html
+
 ## Below are notes to clean up
 
 ## Networking
@@ -172,12 +203,12 @@ default       0s          Warning   ErrInitIssuer      clusterissuer/letsencrypt
 
 ### Ingress Controller vs Ingress Rules
 
-[This answer][] has an excellent explanation about ingress controllers and ingress rules.
+[This SO answer][] has an excellent explanation about ingress controllers and ingress rules.
 
 - The controller is installed when Helm installs Traefik. The controller can be deployed to any namespace, and is the
   actual Traefik binary that runs in a pod.
 - The ingress rules must reside in the same namespace as the app or service. The rules are similar to Traefik's routes
-  in that they explain how to route the traefik to the app. Traefik's
+  in that they explain how to route the traefik to the app.
 
 | Purpose   | Ingress Controller | Ingress Rule        |
 |-----------|--------------------|---------------------|
@@ -185,7 +216,7 @@ default       0s          Warning   ErrInitIssuer      clusterissuer/letsencrypt
 | Resource  | Pod                | Definitions         |
 | Namespace | Any                | Same as the service |
 
-[This answer]: https://stackoverflow.com/a/63167986
+[This SO answer]: https://stackoverflow.com/a/63167986
 
 ## Install k3s cluster
 
@@ -210,8 +241,7 @@ scp root@sns1:.kube/config ~/.kube/config
 
 ### Kubernetes Dashboard
 
-Follow the [k3s docs](https://rancher.com/docs/k3s/latest/en/installation/kube-dashboard/) to install
-the [kubernetes dashboard][].
+Follow the [k3s docs][] to install the [kubernetes dashboard][].
 
 [k3s docs]: https://rancher.com/docs/k3s/latest/en/installation/kube-dashboard/
 
@@ -233,14 +263,6 @@ Install `cert-manager` using [helm](https://cert-manager.io/docs/installation/he
 
 ```bash
 ./cert-manager/cert-manager.sh
-```
-
-### Swagger API
-
-Run swagger auto-complete in the IDE. The proxy should already be running.
-
-```bash
-./swagger/run-swagger.sh
 ```
 
 ## Useful commands

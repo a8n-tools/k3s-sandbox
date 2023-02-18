@@ -27,7 +27,7 @@ spec:
           port: 443
           serversTransport: k3s-dashboard-transport
   tls:
-    secretName: k3s-a8n-tech-staging-tls
+    secretName: k3s-${BASE_DOMAIN_DASH}-staging-tls
 
 ---
 # See this answer on how to handle the TLS certificate on the backend that is not valid.

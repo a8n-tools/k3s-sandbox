@@ -20,7 +20,7 @@ spec:
         - name: api@internal
           kind: TraefikService
   tls:
-    secretName: traefik-a8n-tech-staging-tls
+    secretName: traefik-${BASE_DOMAIN_DASH}-staging-tls
 
 ---
 # Insecure entry point

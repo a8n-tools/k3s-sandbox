@@ -10,13 +10,12 @@ CLOUDFLARE_API_TOKEN_BASE64=$(echo -n "$CLOUDFLARE_API_TOKEN" | base64)
 export CLOUDFLARE_API_TOKEN_BASE64 CLOUDFLARE_API_EMAIL_BASE64
 
 # Add the credentials
-# Go version of envsubst: https://github.com/a8m/envsubst
-envsubst < ./issuers/a8n-tech-cloudflare-token-secret.yml | kubectl apply --filename -
+envsubst < ./issuers/base-domain-cloudflare-token-secret.yml | kubectl apply --filename -
 
 # Add the issuer
 envsubst < ./issuers/letsencrypt-cloudflare-staging.yml | kubectl apply --filename -
 #envsubst < ./issuers/letsencrypt-cloudflare-production.yml | kubectl apply --filename -
 
 # Add the staging certificate first. This starts the process to request the certificate.
-kubectl apply --filename certificates/staging/a8n-tech.yml
-#kubectl apply --filename certificates/production/a8n-tech.yml
+kubectl apply --filename "certificates/staging/base-domain.yml"
+#kubectl apply --filename "certificates/production/base-domain.yml"

@@ -9,5 +9,8 @@ cd "${BASE_DIR}" || exit 0
 export $(grep -vE "^(#.*|\s*)$" .env)
 
 # Create the CRDs
+# Cert manager is first to create the TLS certs
 ./cert-manager/create-crds.sh
+
+# Then comes Traefik
 ./traefik/create-crds.sh

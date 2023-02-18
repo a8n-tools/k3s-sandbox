@@ -20,8 +20,8 @@ spec:
           cloudflare:
             email: $CLOUDFLARE_API_EMAIL
             apiTokenSecretRef:
-              name: a8n-tech-cloudflare-token-secret
-              key: a8n-tech-cloudflare-token
+              name: ${BASE_DOMAIN_DASH}-cloudflare-token-secret
+              key: ${BASE_DOMAIN_DASH}-cloudflare-token
         selector:
           dnsZones:
-            - "a8n.tech"
+            - "${BASE_DOMAIN}"

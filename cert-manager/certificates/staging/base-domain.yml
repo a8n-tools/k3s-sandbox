@@ -2,43 +2,43 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: a8n-tech-staging
+  name: ${BASE_DOMAIN_DASH}-staging
   namespace: traefik
 spec:
-  secretName: a8n-tech-staging-tls
+  secretName: ${BASE_DOMAIN_DASH}-staging-tls
   issuerRef:
     name: letsencrypt-staging
     kind: ClusterIssuer
-  commonName: "a8n.tech"
+  commonName: "${BASE_DOMAIN}"
   dnsNames:
-  - "a8n.tech"
+  - "${BASE_DOMAIN}"
 
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: traefik-a8n-tech-staging
+  name: traefik-${BASE_DOMAIN_DASH}-staging
   namespace: traefik
 spec:
-  secretName: traefik-a8n-tech-staging-tls
+  secretName: traefik-${BASE_DOMAIN_DASH}-staging-tls
   issuerRef:
     name: letsencrypt-staging
     kind: ClusterIssuer
-  commonName: "traefik.a8n.tech"
+  commonName: "traefik.${BASE_DOMAIN}"
   dnsNames:
-    - "traefik.a8n.tech"
+    - "traefik.${BASE_DOMAIN}"
 
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: k3s-a8n-tech-staging
+  name: k3s-${BASE_DOMAIN_DASH}-staging
   namespace: kubernetes-dashboard
 spec:
-  secretName: k3s-a8n-tech-staging-tls
+  secretName: k3s-${BASE_DOMAIN_DASH}-staging-tls
   issuerRef:
     name: letsencrypt-staging
     kind: ClusterIssuer
-  commonName: "k3s.a8n.tech"
+  commonName: "k3s.${BASE_DOMAIN}"
   dnsNames:
-    - "k3s.a8n.tech"
+    - "k3s.${BASE_DOMAIN}"

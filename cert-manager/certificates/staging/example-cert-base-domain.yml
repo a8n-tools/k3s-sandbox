@@ -1,11 +1,11 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: a8n.tech
+  name: ${BASE_DOMAIN}
   namespace: cert-manager
 spec:
   # Secret names are always required.
-  secretName: a8n-tech-tls
+  secretName: ${BASE_DOMAIN_DASH}-tls
 
   # secretTemplate is optional. If set, these annotations and labels will be
   # copied to the Secret named example-com-tls. These labels and annotations will
@@ -23,7 +23,7 @@ spec:
   renewBefore: 360h # 15d
   subject:
     organizations:
-      - a8n-tech
+      - ${BASE_DOMAIN_DASH}
   # The use of the common name field has been deprecated since 2000 and is
   # discouraged from being used.
 #  commonName: example.com
@@ -37,8 +37,8 @@ spec:
     - client auth
   # At least one of a DNS Name, URI, or IP address is required.
   dnsNames:
-    - a8n.tech
-    - www.a8n.tech
+    - ${BASE_DOMAIN}
+    - www.${BASE_DOMAIN}
   uris:
     - spiffe://cluster.local/ns/sandbox/sa/example
 #  ipAddresses:
